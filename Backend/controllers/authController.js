@@ -13,7 +13,7 @@ export const register = async (req, res) => {
 
         const existingUser = await userModel.findOne({ email });
         if (existingUser) {
-            res.status(400).json({ success: false, message: "User already Exists" });
+            return res.status(400).json({ success: false, message: "User already Exists" });
         }
         const hashedPassword = await bycript.hash(password, 10);
 
@@ -25,7 +25,7 @@ export const register = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'none',
             maxAge: 10 * 24 * 60 * 60 * 1000
         });
 
@@ -50,17 +50,17 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        res.json({ success: false, message: "Email and Password is required" });
+        return res.json({ success: false, message: "Email and Password is required" });
     }
 
     try {
         const user = await userModel.findOne({ email });
         if (!user) {
-            res.json({ success: false, message: "Invalid email" });
+            return res.json({ success: false, message: "Invalid email" });
         }
         const isMatch = await bycript.compare(password, user.password);
         if (!isMatch) {
-            res.json({ success: false, message: "Invalid password" });
+            return res.json({ success: false, message: "Invalid password" });
         }
 
         const token = jwt.sign({ id: user._id }, process.env.Secret_Key, { expiresIn: '10d' });
@@ -68,7 +68,7 @@ export const login = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'none',
             maxAge: 10 * 24 * 60 * 60 * 1000
         });
 
@@ -83,7 +83,7 @@ export const logout = async (req, res) => {
         res.clearCookie('token', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'none',
         });
 
         return res.json({ success: true, message: "User Logout Successful" });
@@ -130,7 +130,7 @@ export const sendVerifyOtp = async (req, res) => {
 export const verifyEmail = async (req, res) => {
     const { userId, otp } = req.body;
 
-    if (!userId || otp) {
+    if (!userId || !otp) {
         return res.json({ success: false, message: "Missing details" });
     }
     try {
@@ -138,8 +138,8 @@ export const verifyEmail = async (req, res) => {
         if (!user) {
             return res.status(400).json({ success: false, message: "User Not Found" });
         }
-        if (user.verifyOTP = '' || users.verifyOTP !== otp) {
-            return res.status(400).json({ success: false, message: "Envalid OTP" });
+        if (user.verifyOTP === '' || user.verifyOTP !== otp) {
+            return res.status(400).json({ success: false, message: "Invalid OTP" });
         }
         if (user.verifyOTPExpireAt < Date.now()){
             return res.status(400).json({ success: false, message: "OTP Expired" });
@@ -213,15 +213,15 @@ export const resetPassword = async (req, res) => {
         if(!user){
             return res.status(400).json({ success: false, message: "User not Found" });
         }
-        if(user.resetOTP = '' || user.resetOTP != otp ){
-            return res.status(400).json({ success: false, message: "Invelid OTP" });
+        if(user.resetOTP === '' || user.resetOTP !== otp ){
+            return res.status(400).json({ success: false, message: "Invalid OTP" });
         }
          if (user.resetOTPExpireAt < Date.now()){
             return res.status(400).json({ success: false, message: "OTP Expired" });
         }
 
         const hashedPassword = await bycript.hash(newPassword,10);
-        user.password = newPassword;
+        user.password = hashedPassword;
         user.resetOTP = '';
         user.resetOTPExpireAt = 0;
 
