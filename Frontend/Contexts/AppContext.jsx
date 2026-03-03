@@ -9,39 +9,44 @@ export const AppContext = createContext();
 
 export const AppContextProvider = (props) => {
 
-    const backendUrl = import.meta.env.VITE_BACKEND_URL
+    // during development we proxy /api to the backend so we can use relative URLs
+    // in production you can set VITE_BACKEND_URL and prepend it if needed.
+    // use proxy during development so backendUrl can be omitted
+    const backendUrl = import.meta.env.DEV
+        ? ''
+        : import.meta.env.VITE_BACKEND_URL || '';
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState(false);
 
-    const getAuthState = async () =>{
-        try{
-            const {data} = await axios.get(backendUrl + '/api/auth/is-auth');
-            if(data.success){
+    const getAuthState = async () => {
+        try {
+            const { data } = await axios.get(backendUrl + '/api/auth/is-auth');
+            if (data.success) {
                 setIsLoggedIn(true);
                 getUserData();
             }
-        }catch(err){
+        } catch (err) {
             toast.error(err.message);
         }
     }
 
     const getUserData = async () => {
-        try{
-            const {data} = await axios.get(backendUrl + '/api/user/data');
+        try {
+            const { data } = await axios.get(backendUrl + '/api/user/data');
             data.success ? setUserData(data.userData) : toast.error(data.message)
-        }catch(err){
+        } catch (err) {
             toast.error(err.message);
         }
     }
 
     useEffect(() => {
         getAuthState();
-    },[]);
+    }, []);
 
     const value = {
         backendUrl,
         isLoggedIn, setIsLoggedIn,
-        userData,setUserData, 
+        userData, setUserData,
         getUserData
     }
 

@@ -22,12 +22,14 @@ export const register = async (req, res) => {
 
         const token = jwt.sign({ id: user._id }, process.env.Secret_Key, { expiresIn: '10d' });
 
-        res.cookie('token', token, {
+        // cookies with SameSite=None require Secure flag; use lax during local development
+        const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'none',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 10 * 24 * 60 * 60 * 1000
-        });
+        };
+        res.cookie('token', token, cookieOptions);
 
         // Sending Welcome Email
         const mailOption = {
@@ -65,12 +67,13 @@ export const login = async (req, res) => {
 
         const token = jwt.sign({ id: user._id }, process.env.Secret_Key, { expiresIn: '10d' });
 
-        res.cookie('token', token, {
+        const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'none',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 10 * 24 * 60 * 60 * 1000
-        });
+        };
+        res.cookie('token', token, cookieOptions);
 
         return res.json({ success: true, message: "User Login Successful" });
     } catch (err) {
@@ -167,10 +170,9 @@ export const verifyEmail = async (req, res) => {
 // User IS authenticated or not
 export const isAuthenticated = (req, res) => {
     try {
-
-        return res.json({ success: true });
+    return res.json({ success: true });
     } catch (err) {
-        return res.status(400).json({ message: err.message });
+    return res.status(400).json({ message: err.message });
     }
 }
 
