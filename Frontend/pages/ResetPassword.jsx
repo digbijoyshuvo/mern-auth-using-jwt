@@ -79,57 +79,56 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className='flex items-center justify-center min-h-screen bg-linear-to-br from-blue-200 to-purple-400'>
-      <img onClick={() => navigate('/')}
-        src={assets.logo} alt="" className=' absolute left-5 sm:left-20 top-5 w-28 sm:w-32 cursor-pointer' />
+    <div className='flex items-center justify-center min-h-screen bg-gray-50'>
+      
 
       {/* Enter Email Id */}
       {!isEmailSent &&
-        <form onSubmit={onSubmitEmail} className='bg-slate-900 p-8 rounded-lg shadow-lg w-96 text-sm'>
-          <h1 className='text-white text-2xl font-semibold text-center mb-4'>Reset Password</h1>
-          <p className='text-center mb-6 text-indigo-300'>Enter your registered email address</p>
+        <form onSubmit={onSubmitEmail} className='relative z-10 bg-white p-8 rounded-lg shadow-md w-96 text-sm border border-gray-200'>
+          <h1 className='text-gray-800 text-2xl font-bold text-center mb-4'>Reset Password</h1>
+          <p className='text-center mb-6 text-gray-600'>Enter your registered email address</p>
 
-          <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
+          <div className='mb-4 flex items-center gap-3 w-full px-5 py-3 rounded-lg bg-gray-100 border border-gray-300'>
             <img src={assets.mail_icon} alt="" className='w-3 h-3' />
             <input type="email" placeholder='Email Id'
-              className='bg-transparent outline-none text-white'
+              className='bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-1'
               value={email} onChange={e => setEmail(e.target.value)} required />
           </div>
-          <button type="submit" className='w-full py-3 bg-linear-to-r from-indigo-500 to-indigo-900 text-white rounded-full font-semibold text-[16px] cursor-pointer'>Send OTP Request</button>
+          <button type="submit" className='w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold text-[16px] cursor-pointer shadow-md hover:shadow-lg transition-all duration-300'>Send OTP Request</button>
         </form>
       }
 
       {/* otp input form */}
       {!isOtpSubmitted && isEmailSent &&
-        <form onSubmit={onSubmitOTP} className='bg-slate-900 p-8 rounded-lg shadow-lg w-96 text-sm'>
-          <h1 className='text-white text-2xl font-semibold text-center mb-4'>Reset Password OTP</h1>
-          <p className='text-center mb-6 text-indigo-300'>Enter the 6 digit code sent to your email id.</p>
+        <form onSubmit={onSubmitOTP} className='relative z-10 bg-white p-8 rounded-lg shadow-md w-96 text-sm border border-gray-200'>
+          <h1 className='text-gray-800 text-2xl font-bold text-center mb-4'>Reset Password OTP</h1>
+          <p className='text-center mb-6 text-gray-600'>Enter the 6 digit code sent to your email id.</p>
           <div className='flex justify-between mb-8' onPaste={handlePaste}>
             {Array(6).fill(0).map((_, index) => (
               <input type="text" maxLength='1' key={index} required
-                className='w-12 h-12 bg-[#333A5C] text-white text-center text-xl rounded-md'
+                className='w-12 h-12 bg-gray-100 text-gray-800 text-center text-xl rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200'
                 ref={e => inputRefs.current[index] = e}
                 onInput={(e) => handleInput(e, index)}
                 onKeyDown={(e) => handelKeyDown(e, index)}
               />
             ))}
           </div>
-          <button type="submit" className='w-full py-3 bg-linear-to-r from-indigo-500 to-indigo-900 text-white rounded-full font-semibold text-[16px] cursor-pointer'>Verify OTP</button>
+          <button type="submit" className='w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold text-[16px] cursor-pointer shadow-md hover:shadow-lg transition-all duration-300'>Verify OTP</button>
         </form>
       }
       {/* Enter New Password */}
       {isOtpSubmitted && isEmailSent &&
-        <form onSubmit={onSubmitPassword} className='bg-slate-900 p-8 rounded-lg shadow-lg w-96 text-sm'>
-          <h1 className='text-white text-2xl font-semibold text-center mb-4'>New Password</h1>
-          <p className='text-center mb-6 text-indigo-300'>Enter the ew Password Below</p>
+        <form onSubmit={onSubmitPassword} className='relative z-10 bg-white p-8 rounded-lg shadow-md w-96 text-sm border border-gray-200'>
+          <h1 className='text-gray-800 text-2xl font-bold text-center mb-4'>New Password</h1>
+          <p className='text-center mb-6 text-gray-600'>Enter the new Password Below</p>
 
-          <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
+          <div className='mb-4 flex items-center gap-3 w-full px-5 py-3 rounded-lg bg-gray-100 border border-gray-300'>
             <img src={assets.lock_icon} alt="" className='w-3 h-3' />
             <input type="password" placeholder='Write Password'
-              className='bg-transparent outline-none text-white'
+              className='bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-1'
               value={newPassword} onChange={e => setnewPassword(e.target.value)} required />
           </div>
-          <button type="submit" className='w-full py-3 bg-linear-to-r from-indigo-500 to-indigo-900 text-white rounded-full font-semibold text-[16px] cursor-pointer'>Save New Password</button>
+          <button type="submit" className='w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold text-[16px] cursor-pointer shadow-md hover:shadow-lg transition-all duration-300'>Save New Password</button>
         </form>
       }
     </div>

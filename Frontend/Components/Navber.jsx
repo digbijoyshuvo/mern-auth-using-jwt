@@ -1,5 +1,4 @@
 import React from 'react'
-import {assets} from '../assets/assets';
 import { useNavigate } from 'react-router-dom'
 import { useContext } from 'react';
 import { AppContext } from '../Contexts/AppContext';
@@ -37,24 +36,34 @@ const Navber = () => {
     }
   }
   return (
-    <div className=' w-full flex justify-between items-center p-4 sm:p-6 px-24 absolute top-0'>
-      <img src={assets.logo} alt="" className=' w-28 sm:w-32' />
+    <div className='relative z-20 w-full flex justify-between items-center p-4 sm:p-6 px-24 absolute top-0'>
+      <div className='bg-white rounded-lg px-6 py-3 shadow-md border border-gray-200'>
+        
+      </div>
       {
 
       userData ? 
-      <div className='w-8 h-8 flex justify-center items-center rounded-full bg-black text-white relative group'>
-        {userData.name[0].toUpperCase()}
-        <div className=' absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-10'>
-          <ul className='list-none m-0 p-2 bg-gray-100 text-sm'> 
-            {!userData.isAccountVerified && <li onClick={sendVerificationOtp} className=' py-1 px-2 hover:bg-gray-200 cursor-pointer'>Verify Email</li> }
-            
-            <li onClick={logout} className=' py-1 px-2 hover:bg-gray-200 cursor-pointer pr-10'>Logout</li>
-          </ul>
-
+      <div className='relative'>
+        <div className='w-12 h-12 flex justify-center items-center rounded-full bg-blue-500 text-white font-bold text-lg shadow-md hover:shadow-lg cursor-pointer group'>
+          {userData.name[0].toUpperCase()}
+          <div className='absolute hidden group-hover:block top-14 right-0 z-30 text-black rounded-lg pt-2'>
+            <ul className='list-none m-0 p-3 bg-white rounded-lg shadow-md border border-gray-200 min-w-[120px]'> 
+              {!userData.isAccountVerified && 
+                <li onClick={sendVerificationOtp} className='py-2 px-3 hover:bg-gray-100 cursor-pointer rounded-md transition-colors duration-200 text-sm font-medium'>
+                  Verify Email
+                </li>
+              }
+              <li onClick={logout} className='py-2 px-3 hover:bg-red-50 cursor-pointer rounded-md transition-colors duration-200 text-sm font-medium text-red-600'>
+                Logout
+              </li>
+            </ul>
+          </div>
         </div>
       </div> :
       <button onClick={ ()=> navigate('/login')}
-      className='flex items-center gap-2 border border-gray-500 px-6 py-2 rounded-full text-gray-800 hover:bg-gray-100 transition-all'>Login <img src={assets.arrow_icon} alt="" /></button>
+      className='flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300'>
+        Login 
+      </button>
 
       }
     </div>
